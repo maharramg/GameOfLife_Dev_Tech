@@ -18,6 +18,8 @@ struct ArrStruct
 void printArray(int arr[row][column]);
 struct ArrStruct fillArray(struct ArrStruct myStruct);
 struct ArrStruct fillRandArray(struct ArrStruct myStruct);
+struct ArrStruct countNeighbours(struct ArrStruct myStruct);
+struct ArrStruct checkNewborns(struct ArrStruct myStruct);
 
 //Main function
 int main(int argc, char const *argv[])
@@ -26,6 +28,12 @@ int main(int argc, char const *argv[])
 
     array = fillRandArray(array);
     printf("First generation: (1's are living cells | 0's are dead cells)\n");
+    printArray(array.playZone);
+    array = countNeighbours(array);
+    printf("\nCells after dying and remaining alive:\n");
+    printArray(array.playZone);
+    array = checkNewborns(array);
+    printf("\nNext generation:\n");
     printArray(array.playZone);
 
     return 0;
@@ -62,6 +70,122 @@ struct ArrStruct fillRandArray(struct ArrStruct myStruct)
             else
             {
                 myStruct.playZone[i][j] = 0;
+            }
+        }
+    }
+    return myStruct;
+}
+
+//Counts 8 neighbours of each cell and decides either it dies or remains alive
+struct ArrStruct countNeighbours(struct ArrStruct myStruct)
+{
+    int neighbors;
+
+    for (int i = 1; i < row - 1; i++)
+    {
+        for (int j = 1; j < column - 1; j++)
+        {
+            neighbors = 0;
+
+            if (myStruct.playZone[i][j] == 1)
+            {
+                if (myStruct.playZone[i][j + 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i + 1][j + 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i + 1][j] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i + 1][j - 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i][j - 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i - 1][j - 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i - 1][j] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i - 1][j + 1] == 1)
+                {
+                    neighbors++;
+                }
+
+                if ((neighbors == 2) || (neighbors == 3))
+                {
+                    myStruct.playZone[i][j] = 1; /*live*/
+                }
+                else if ((neighbors < 2) || (neighbors >= 4))
+                {
+                    myStruct.playZone[i][j] = 0; /*die*/
+                }
+            }
+        }
+    }
+    return myStruct;
+}
+
+//Checks if dead cells are going to reborn or not
+struct ArrStruct checkNewborns(struct ArrStruct myStruct)
+{
+    int neighbors;
+    int a, b;
+
+    for (int i = 1; i < row - 1; i++)
+    {
+        for (int j = 1; j < column - 1; j++)
+        {
+            neighbors = 0;
+
+            if (myStruct.playZone[i][j] == 0)
+            {
+                if (myStruct.playZone[i][j + 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i + 1][j + 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i + 1][j] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i + 1][j - 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i][j - 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i - 1][j - 1] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i - 1][j] == 1)
+                {
+                    neighbors++;
+                }
+                if (myStruct.playZone[i - 1][j + 1] == 1)
+                {
+                    neighbors++;
+                }
+                if ((neighbors == 3))
+                {
+                    myStruct.playZone[i][j] = 1; /*newborn*/
+                }
             }
         }
     }
