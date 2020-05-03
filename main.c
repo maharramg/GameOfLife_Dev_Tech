@@ -15,11 +15,19 @@ struct ArrStruct
     int playZone[row][column];
 };
 
+struct ArrStructCopy
+{
+    int playZoneCopy[row][column];
+};
+
 void printArray(int arr[row][column]);
 struct ArrStruct fillArray(struct ArrStruct myStruct);
 struct ArrStruct fillRandArray(struct ArrStruct myStruct);
 struct ArrStruct countNeighbours(struct ArrStruct myStruct);
 struct ArrStruct checkNewborns(struct ArrStruct myStruct);
+int checkForExistence(struct ArrStruct myStruct);
+struct ArrStructCopy makeCopy(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
+int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
 
 //Main function
 int main(int argc, char const *argv[])
@@ -190,4 +198,49 @@ struct ArrStruct checkNewborns(struct ArrStruct myStruct)
         }
     }
     return myStruct;
+}
+
+//Checks the board if there is any creatures in order to know if terminate the game or not
+int checkForExistence(struct ArrStruct myStruct)
+{
+    int creatures = 0;
+    for (int i = 1; i < row - 1; i++)
+    {
+        for (int j = 1; j < column - 1; j++)
+        {
+            if (myStruct.playZone[i][j] == 1)
+                creatures++;
+        }
+    }
+    if (creatures == 0)
+        return TRUE; /*all creatures died*/
+    else
+        return FALSE; /*there are still living creatures*/
+}
+
+//Makes copy of the current array
+struct ArrStructCopy makeCopy(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct)
+{
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < column; j++)
+        {
+            myStructCopy.playZoneCopy[i][j] = myStruct.playZone[i][j];
+        }
+    }
+    return myStructCopy;
+}
+
+//Compares 2 arrays
+int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct)
+{
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < column; j++)
+        {
+            if (myStructCopy.playZoneCopy[i][j] != myStruct.playZone[i][j])
+                return 0;
+        }
+    }
+    return 1;
 }
