@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define row 5
-#define column 5
+#define row 10
+#define column 10
 
 const int TRUE = 1;
 const int FALSE = 0;
@@ -15,6 +15,7 @@ struct ArrStruct
     int playZone[row][column];
 };
 
+//Copy of the struct above
 struct ArrStructCopy
 {
     int playZoneCopy[row][column];
@@ -28,21 +29,15 @@ struct ArrStruct checkNewborns(struct ArrStruct myStruct);
 int checkForExistence(struct ArrStruct myStruct);
 struct ArrStructCopy makeCopy(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
 int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
+void playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy);
 
 //Main function
 int main(int argc, char const *argv[])
 {
     struct ArrStruct array;
+    struct ArrStructCopy arrayCopy;
 
-    array = fillRandArray(array);
-    printf("First generation: (1's are living cells | 0's are dead cells)\n");
-    printArray(array.playZone);
-    array = countNeighbours(array);
-    printf("\nCells after dying and remaining alive:\n");
-    printArray(array.playZone);
-    array = checkNewborns(array);
-    printf("\nNext generation:\n");
-    printArray(array.playZone);
+    playGame(array, arrayCopy);
 
     return 0;
 }
@@ -243,4 +238,40 @@ int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct)
         }
     }
     return 1;
+}
+
+//Game itself with all the functions that implemented
+void playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy)
+{
+    myStruct = fillRandArray(myStruct);
+    printf("\nFirst Generation:\n");
+    printArray(myStruct.playZone);
+    sleep(1);
+
+    while (TRUE)
+    {
+        myStruct = countNeighbours(myStruct);
+        myStruct = checkNewborns(myStruct);
+
+        if (compareArray(myStructCopy, myStruct))
+        {
+            printf("\nLast Generation:\n");
+            printArray(myStruct.playZone);
+            printf("\nLAST GENERATION REMAINS THE SAME: GAME OVER\n");
+            exit(0);
+        }
+
+        printf("\nNext generation:\n");
+        printArray(myStruct.playZone);
+        sleep(1);
+
+        myStructCopy = makeCopy(myStructCopy, myStruct);
+
+        int check = checkForExistence(myStruct);
+        if (check == TRUE)
+        {
+            printf("\nALL CREATURES HAVE DIED: GAME OVER");
+            exit(0);
+        }
+    }
 }
