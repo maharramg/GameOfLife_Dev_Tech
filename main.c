@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define row 10
-#define column 10
+#define row 30
+#define column 30
 
 const int TRUE = 1;
 const int FALSE = 0;
@@ -30,6 +30,7 @@ int checkForExistence(struct ArrStruct myStruct);
 struct ArrStructCopy makeCopy(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
 int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
 void playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy);
+void ansiFunc(struct ArrStruct myStruct);
 
 //Main function
 int main(int argc, char const *argv[])
@@ -240,12 +241,46 @@ int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct)
     return 1;
 }
 
+//Show colorized cells
+void ansiFunc(struct ArrStruct myStruct)
+{
+    // clear screen
+    printf("\033[2J");
+
+    // hide cursor
+    printf("\033[?25l");
+
+    // goto 0,0
+    for (int i = 0; i < row; ++i)
+    {
+        printf("\033[%d;4H", i + 2);
+        for (int j = 0; j < column; ++j)
+        {
+            if (myStruct.playZone[i][j] == 1)
+            {
+                myStruct.playZone[i][j] = 104;
+            }
+            else
+            {
+                myStruct.playZone[i][j] = 40;
+            }
+
+            printf("\033[%dm  ", myStruct.playZone[i][j]);
+            // draw 2 space with color 40 or 101 (black or magenta)
+        }
+        printf("\n");
+    }
+
+    //show cursor
+    printf("\033[?25h");
+}
+
 //Game itself with all the functions that implemented
 void playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy)
 {
     myStruct = fillRandArray(myStruct);
     printf("\nFirst Generation:\n");
-    printArray(myStruct.playZone);
+    ansiFunc(myStruct);
     sleep(1);
 
     while (TRUE)
@@ -256,13 +291,13 @@ void playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy)
         if (compareArray(myStructCopy, myStruct))
         {
             printf("\nLast Generation:\n");
-            printArray(myStruct.playZone);
+            ansiFunc(myStruct);
             printf("\nLAST GENERATION REMAINS THE SAME: GAME OVER\n");
             exit(0);
         }
 
         printf("\nNext generation:\n");
-        printArray(myStruct.playZone);
+        ansiFunc(myStruct);
         sleep(1);
 
         myStructCopy = makeCopy(myStructCopy, myStruct);
