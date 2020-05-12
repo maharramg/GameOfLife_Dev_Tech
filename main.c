@@ -1,6 +1,6 @@
 #include "game.h"
 
-//! Main function
+// Main function
 int main(int argc, char const *argv[])
 {
     struct ArrStruct array;

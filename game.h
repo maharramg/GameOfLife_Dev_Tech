@@ -11,13 +11,13 @@
 #define TRUE 1
 #define FALSE 0
 
-//! Struct that keeps our main 2D array which we are working with
+// Struct that keeps our main 2D array which we are working with
 struct ArrStruct
 {
     int playZone[row][column];
 };
 
-//! Copy of the struct above
+// Copy of the struct above
 struct ArrStructCopy
 {
     int playZoneCopy[row][column];
