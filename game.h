@@ -1,7 +1,7 @@
-#ifndef _INCLUDES_
-#define _INCLUDES_
+#ifndef _GAME_
+#define _GAME_
 
-#include <stdio.h>
+#include <stdio.h>  
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -11,11 +11,13 @@
 #define TRUE 1
 #define FALSE 0
 
+//! Struct that keeps our main 2D array which we are working with
 struct ArrStruct
 {
     int playZone[row][column];
 };
 
+//! Copy of the struct above
 struct ArrStructCopy
 {
     int playZoneCopy[row][column];
@@ -28,6 +30,6 @@ int checkForExistence(struct ArrStruct myStruct);
 struct ArrStructCopy makeCopy(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
 int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
 void playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy);
-void ansiFunc(struct ArrStruct myStruct);
+void printInConsole(struct ArrStruct myStruct);
 
 #endif

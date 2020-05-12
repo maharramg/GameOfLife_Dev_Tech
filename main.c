@@ -1,5 +1,6 @@
-#include "includes.h"
+#include "game.h"
 
+//! Main function
 int main(int argc, char const *argv[])
 {
     struct ArrStruct array;

@@ -8,11 +8,13 @@ exec:
 	./$(OBJ)
 
 doc:
-	mkdir documentation
-	@echo "Documentation folder created."
+	doxygen dconfig
+	$(MAKE) -C docs/latex
+	xdg-open docs/html/index.html
+	xdg-open docs/latex/refman.pdf
 
 dist:
-	mkdir game && cp game.c main.c includes.h game && tar -czvf game.tar.gz game && rm -rf game
+	mkdir Game_of_Life && cp game.c main.c game.h Makefile Game_of_Life && tar -czvf Game_of_Life.tar.gz Game_of_Life && rm -rf Game_of_Life
 
 clean:
 	rm -rf $(OBJ)
