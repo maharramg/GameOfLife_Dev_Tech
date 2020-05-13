@@ -1,6 +1,7 @@
-#include "game.h"
+#include "./game/game.h"
+#include "./console/draw.h"
+#include "./sdl/sdl.h"
 
-// Main function
 int main(int argc, char const *argv[])
 {
     struct ArrStruct array;
