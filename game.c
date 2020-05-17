@@ -59,11 +59,11 @@ struct ArrStruct countNeighbours(struct ArrStruct myStruct)
                     {
                         continue;
                     }
-                    else if (neigh_row == i && neigh_col == j)
+                    if (neigh_row == i && neigh_col == j)
                     {
                         continue;
                     }
-                    else if (myStruct.playZone[neigh_row][neigh_col] == 1)
+                    if (myStruct.playZone[neigh_row][neigh_col] == 1)
                     {
                         neighbors++;
                     }
