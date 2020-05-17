@@ -11,22 +11,23 @@
 #define TRUE 1
 #define FALSE 0
 
+int choiceVersion;
+
 struct ArrStruct
 {
     int playZone[row][column];
-};
-
-struct ArrStructCopy
-{
     int playZoneCopy[row][column];
 };
 
+struct ArrStruct array;
+
 void printArray(int arr[row][column]);
 struct ArrStruct fillRandArray(struct ArrStruct myStruct);
-struct ArrStruct countNeighbours(struct ArrStruct myStruct);
-int checkForExistence(struct ArrStruct myStruct);
-struct ArrStructCopy makeCopy(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
-int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct);
-int playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy);
+struct ArrStruct countNeighboursClipped(struct ArrStruct myStruct);
+struct ArrStruct countNeighboursCircular(struct ArrStruct myStruct);
+int checkForNotExist(struct ArrStruct myStruct);
+struct ArrStruct makeCopy(struct ArrStruct myStructCopy, struct ArrStruct myStruct);
+int compareArray(struct ArrStruct myStructCopy, struct ArrStruct myStruct);
+void playGame(struct ArrStruct myStruct, struct ArrStruct myStructCopy);
 
 #endif

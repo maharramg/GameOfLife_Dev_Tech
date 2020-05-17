@@ -22,7 +22,14 @@ void draw(SDL_Renderer *renderer, struct ArrStruct myStruct)
                     SDL_RenderFillRect(renderer, &rpixel);
                 }
         }
-        myStruct = countNeighbours(myStruct);
+        if (choiceVersion == 1)
+        {
+            myStruct = countNeighboursClipped(myStruct);
+        }
+        else
+        {
+            myStruct = countNeighboursClipped(myStruct);
+        }
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
     }
