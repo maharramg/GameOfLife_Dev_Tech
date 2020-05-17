@@ -37,7 +37,7 @@ struct ArrStruct fillRandArray(struct ArrStruct myStruct)
     return myStruct;
 }
 
-struct ArrStruct countNeighbours(struct ArrStruct myStruct)
+struct ArrStruct countNeighboursClipped(struct ArrStruct myStruct)
 {
     int neighbors;
 
@@ -58,11 +58,13 @@ struct ArrStruct countNeighbours(struct ArrStruct myStruct)
                     {
                         continue;
                     }
-                    else if (neigh_row == i && neigh_col == j)
+
+                    if (neigh_row == i && neigh_col == j)
                     {
                         continue;
                     }
-                    else if (myStruct.playZone[neigh_row][neigh_col] == 1)
+
+                    if (myStruct.playZone[neigh_row][neigh_col] == 1)
                     {
                         neighbors++;
                     }
@@ -82,7 +84,55 @@ struct ArrStruct countNeighbours(struct ArrStruct myStruct)
     return myStruct;
 }
 
-int checkForExistence(struct ArrStruct myStruct)
+struct ArrStruct countNeighboursCircular(struct ArrStruct myStruct)
+{
+    int neighbors;
+
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < column; j++)
+        {
+            neighbors = 0;
+
+            for (int a = -1; a <= 1; a++)
+            {
+                for (int b = -1; b <= 1; b++)
+                {
+                    int neigh_row = i + a;
+                    int neigh_col = j + b;
+
+                    if (neigh_col < 0 || neigh_row < 0 || neigh_col >= row || neigh_row >= column)
+                    {
+                        neigh_row = (i + a + row) % row;
+                        neigh_col = (j + b + column) % column;
+                    }
+
+                    if (neigh_row == i && neigh_col == j)
+                    {
+                        continue;
+                    }
+
+                    if (myStruct.playZone[neigh_row][neigh_col] == 1)
+                    {
+                        neighbors++;
+                    }
+                }
+            }
+
+            if (myStruct.playZone[i][j] == 0 && neighbors == 3)
+            {
+                myStruct.playZone[i][j] = 1;
+            }
+            else if (myStruct.playZone[i][j] == 1 && (neighbors < 2 || neighbors > 3))
+            {
+                myStruct.playZone[i][j] = 0;
+            }
+        }
+    }
+    return myStruct;
+}
+
+int checkForNotExist(struct ArrStruct myStruct)
 {
     int creatures = 0;
     for (int i = 0; i < row; i++)
@@ -99,7 +149,7 @@ int checkForExistence(struct ArrStruct myStruct)
         return FALSE; /*there are still living creatures*/
 }
 
-struct ArrStructCopy makeCopy(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct)
+struct ArrStruct makeCopy(struct ArrStruct myStructCopy, struct ArrStruct myStruct)
 {
     for (int i = 0; i < row; i++)
     {
@@ -111,26 +161,32 @@ struct ArrStructCopy makeCopy(struct ArrStructCopy myStructCopy, struct ArrStruc
     return myStructCopy;
 }
 
-int compareArray(struct ArrStructCopy myStructCopy, struct ArrStruct myStruct)
+int compareArray(struct ArrStruct myStructCopy, struct ArrStruct myStruct)
 {
     for (int i = 0; i < row; i++)
     {
         for (int j = 0; j < column; j++)
         {
             if (myStructCopy.playZoneCopy[i][j] != myStruct.playZone[i][j])
-                return 0;
+                return FALSE;
         }
     }
-    return 1;
+    return TRUE;
 }
 
-int playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy)
+void playGame(struct ArrStruct myStructCopy, struct ArrStruct myStruct)
 {
     myStruct = fillRandArray(myStruct);
-    int choice = 0;
-    printf("Enter 1 to print in console, enter 2 to print in sdl:\n");
-    scanf("%d", &choice);
-    if (choice == 1)
+
+    int choicePrint = 0;
+
+    printf("Enter 1 for clipped version || 2 for circular version:\n");
+    scanf("%d", &choiceVersion);
+
+    printf("Enter 1 to visualize in console || 2 to visualize in sdl:\n");
+    scanf("%d", &choicePrint);
+
+    if (choicePrint == 1)
     {
         printf("\nFirst Generation:\n");
         printInConsole(myStruct);
@@ -138,14 +194,26 @@ int playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy)
 
         while (TRUE)
         {
-            myStruct = countNeighbours(myStruct);
+            if (choiceVersion == 1)
+            {
+                myStruct = countNeighboursClipped(myStruct);
+            }
+            else if (choiceVersion == 2)
+            {
+                myStruct = countNeighboursCircular(myStruct);
+            }
+            else
+            {
+                printf("Invalid input! Input should be either 1 or 2 !");
+                exit(0);
+            }
 
             if (compareArray(myStructCopy, myStruct))
             {
                 printf("\nLast Generation:\n");
                 printInConsole(myStruct);
                 printf("\nLAST GENERATION REMAINS THE SAME: GAME OVER\n");
-                return 0;
+                exit(0);
             }
 
             printf("\nNext generation:\n");
@@ -154,17 +222,21 @@ int playGame(struct ArrStruct myStruct, struct ArrStructCopy myStructCopy)
 
             myStructCopy = makeCopy(myStructCopy, myStruct);
 
-            int check = checkForExistence(myStruct);
+            int check = checkForNotExist(myStruct);
             if (check == TRUE)
             {
                 printf("\nALL CREATURES HAVE DIED: GAME OVER\n");
-                return 0;
+                exit(0);
             }
         }
     }
-    else
+    else if (choicePrint == 2)
     {
         function(myStruct);
     }
-    return 1;
+    else
+    {
+        printf("Invalid input! Input should be either 1 or 2 !");
+        exit(0);
+    }
 }

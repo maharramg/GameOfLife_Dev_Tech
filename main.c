@@ -4,10 +4,7 @@
 
 int main(int argc, char const *argv[])
 {
-    struct ArrStruct array;
-    struct ArrStructCopy arrayCopy;
-
-    playGame(array, arrayCopy);
+    playGame(array, array);
 
     return 0;
 }
