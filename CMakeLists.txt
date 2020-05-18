@@ -59,5 +59,4 @@ WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 add_custom_target(cover_html
 COMMAND cmake --build . --target test
 COMMAND gcovr --html --html-detail -o index.html -r ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} $<TARGET_FILE:${TEST_PROJECT}>
-COMMAND xdg-open ${CMAKE_SOURCE_DIR}/build/index.html
 WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
